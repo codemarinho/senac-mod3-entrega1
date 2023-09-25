@@ -22,6 +22,11 @@ public class listagemVIEW extends javax.swing.JFrame {
     public listagemVIEW() {
         initComponents();
         listarProdutos();
+        btnVender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVenderActionPerformed(evt);
+            }
+        });
     }
 
     /**
@@ -31,21 +36,21 @@ public class listagemVIEW extends javax.swing.JFrame {
      */
      
      private void listarProdutos() {
-            ProdutosDAO produtosdao = new ProdutosDAO();
-            
-            DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-            model.setNumRows(0);
-            
-            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos();
-            
-            for (int i = 0; i < listagem.size(); i++) {
-                model.addRow(new Object[]{
-                    listagem.get(i).getId(),
-                    listagem.get(i).getNome(),
-                    listagem.get(i).getValor(),
-                    listagem.get(i).getStatus()
-                });
-            }
+        ProdutosDAO produtosdao = new ProdutosDAO();
+
+        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
+        model.setNumRows(0);
+
+        ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos();
+
+        for (int i = 0; i < listagem.size(); i++) {
+            model.addRow(new Object[]{
+                listagem.get(i).getId(),
+                listagem.get(i).getNome(),
+                listagem.get(i).getValor(),
+                listagem.get(i).getStatus()
+            });
+        }
     }
      
      
@@ -158,14 +163,19 @@ public class listagemVIEW extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
+    private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {
         String id = id_produto_venda.getText();
         
-        ProdutosDAO produtosdao = new ProdutosDAO();
-        
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
-    }//GEN-LAST:event_btnVenderActionPerformed
+        if (!id.isEmpty()) {
+            ProdutosDAO produtosdao = new ProdutosDAO();
+            produtosdao.venderProduto(Integer.parseInt(id));
+            listarProdutos();
+            id_produto_venda.setText(""); // Limpar o campo após a venda
+        } else {
+            JOptionPane.showMessageDialog(this, "Informe o ID do produto para realizar a venda.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
         //vendasVIEW vendas = new vendasVIEW(); 

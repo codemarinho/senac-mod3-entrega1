@@ -1,52 +1,46 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Adm
- */
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProdutosDAO {
-    private Connection connection;
+    private Connection conn;
 
-    public ProdutosDAO() {
-        connection = ConnectionFactory.getConnection();
-    }
-
-    public List<ProdutosDTO> listarProdutos() {
-        List<ProdutosDTO> produtos = new ArrayList<>();
-        String sql = "SELECT * FROM produtos";
+    public boolean venderProduto(int idProduto) {
+        PreparedStatement stmt = null;
 
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+            conn = Conexao.getConexao(); 
 
-            while (resultSet.next()) {
-                ProdutosDTO produto = new ProdutosDTO();
-                produto.setId(resultSet.getInt("id"));
-                produto.setNome(resultSet.getString("nome"));
-                produto.setValor(resultSet.getInt("valor"));
-                produto.setStatus(resultSet.getString("status"));
+            // SQL para atualizar o status do produto para "Vendido"
+            String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
 
-                produtos.add(produto);
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idProduto);
+
+            // Executa a atualização
+            int rowsUpdated = stmt.executeUpdate();
+
+            // Verifica se a atualização foi bem-sucedida
+            if (rowsUpdated > 0) {
+                System.out.println("Produto vendido com sucesso!");
+                return true;
+            } else {
+                System.out.println("Não foi possível vender o produto. Produto não encontrado.");
+                return false;
             }
-
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao vender o produto: " + e.getMessage());
+            return false;
+        } finally {
+            // Feche o PreparedStatement
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-
-        return produtos;
     }
 
 }

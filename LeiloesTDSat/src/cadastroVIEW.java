@@ -14,6 +14,9 @@ public class cadastroVIEW extends javax.swing.JFrame {
      */
     public cadastroVIEW() {
         initComponents();
+        
+        // Defina esta tela como a tela principal
+    	this.setVisible(true);
     }
 
     /**

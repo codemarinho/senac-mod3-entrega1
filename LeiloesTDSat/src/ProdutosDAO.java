@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class ProdutosDAO {
     private Connection conn;
 
+    // Outros métodos e atributos da classe...
 
     public ArrayList<ProdutosDTO> listarProdutosVendidos() {
         PreparedStatement stmt = null;
@@ -15,7 +16,7 @@ public class ProdutosDAO {
         ArrayList<ProdutosDTO> produtosVendidos = new ArrayList<>();
 
         try {
-            conn = Conexao.getConexao(); //faltou testar o a conexão com o banco aqui
+            conn = Conexao.getConexao(); //ainda nao testou a conexao
 
             // SQL para selecionar produtos com status "Vendido"
             String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";

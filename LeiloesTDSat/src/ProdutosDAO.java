@@ -1,52 +1,60 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Adm
- */
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProdutosDAO {
-    private Connection connection;
+    private Connection conn;
 
-    public ProdutosDAO() {
-        connection = ConnectionFactory.getConnection();
-    }
+    // Outros métodos e atributos da classe...
 
-    public List<ProdutosDTO> listarProdutos() {
-        List<ProdutosDTO> produtos = new ArrayList<>();
-        String sql = "SELECT * FROM produtos";
+    public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        ArrayList<ProdutosDTO> produtosVendidos = new ArrayList<>();
 
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+            conn = Conexao.getConexao(); //ainda nao testou a conexao
 
-            while (resultSet.next()) {
+            // SQL para selecionar produtos com status "Vendido"
+            String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
+
+            stmt = conn.prepareStatement(sql);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
                 ProdutosDTO produto = new ProdutosDTO();
-                produto.setId(resultSet.getInt("id"));
-                produto.setNome(resultSet.getString("nome"));
-                produto.setValor(resultSet.getInt("valor"));
-                produto.setStatus(resultSet.getString("status"));
-
-                produtos.add(produto);
+                produto.setId(rs.getInt("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setValor(rs.getInt("valor"));
+                produto.setStatus(rs.getString("status"));
+                produtosVendidos.add(produto);
             }
 
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao listar produtos vendidos: " + e.getMessage());
+        } finally {
+            // Feche o ResultSet e o PreparedStatement
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
-        return produtos;
+        return produtosVendidos;
     }
 
 }

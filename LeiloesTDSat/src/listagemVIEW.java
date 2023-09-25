@@ -162,8 +162,14 @@ public class listagemVIEW extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {
+    VendasView vendas = new VendasView(); // Crie uma instância da tela de Vendas
+    vendas.setVisible(true); // Torna a tela de Vendas visível
+	}
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {
+    	
         String id = id_produto_venda.getText();
         
         if (!id.isEmpty()) {

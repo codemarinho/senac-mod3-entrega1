@@ -9,7 +9,7 @@ public class ProdutosDAO {
         PreparedStatement stmt = null;
 
         try {
-            conn = Conexao.getConexao(); 
+            conn = Conexao.getConexao(); //conexão
 
             // SQL para atualizar o status do produto para "Vendido"
             String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
